@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""
+Module: advanced_dashboard.py
+Purpose: Advanced Visualization & Control Interface for the Adaptive Resource Allocation System.
+
+This Dash application displays real-time (simulated) aggregated system metrics and resource allocation decisions.
+It includes real-time graphs, manual threshold adjustments, and a manual refresh option.
+The layout is styled using Bootstrap for a polished appearance.
+"""
+
+import dash
+import dash_bootstrap_components as dbc
+from dash import html, dcc, Output, Input, State
+import plotly.graph_objs as go
+import json
+import time
+import random
+
+# ---------------------------
+# Simulated Data Functions
+# ---------------------------
+def simulate_aggregated_metrics():
+    """
+    Simulates aggregated system metrics with slight random fluctuations.
+    
+    Returns:
+        dict: Simulated aggregated metrics.
+              Example structure:
+              {
+                  "cpu_percent": {"avg": 85.0, "min": 80.0, "max": 90.0, "std": 3.0},
+                  "memory_percent": {"avg": 70.0, "min": 65.0, "max": 75.0, "std": 2.5},
+                  "timestamp": "2025-02-14T17:06:48Z"
+              }
+    """
+    base_cpu = 85.0 + random.uniform(-2, 2)
+    base_mem = 70.0 + random.uniform(-2, 2)
+    simulated_data = {
+        "cpu_percent": {
+            "avg": round(base_cpu, 1),
+            "min": round(base_cpu - 5, 1),
+            "max": round(base_cpu + 5, 1),
+            "std": 3.0
+        },
+        "memory_percent": {
+            "avg": round(base_mem, 1),
+            "min": round(base_mem - 5, 1),
+            "max": round(base_mem + 5, 1),
+            "std": 2.5
+        },
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+    return simulated_data
