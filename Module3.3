@@ -1,0 +1,44 @@
+# ---------------------------
+# Callbacks for updating the dashboard
+# ---------------------------
+@app.callback(
+    [Output("cpu-graph", "figure"),
+     Output("memory-graph", "figure"),
+     Output("decision-output", "children"),
+     Output("history-store", "data"),
+     Output("interval-component", "interval")],
+    [Input("interval-component", "n_intervals"),
+     Input("refresh-button", "n_clicks"),
+     Input("cpu-threshold-slider", "value"),
+     Input("mem-threshold-slider", "value"),
+     Input("interval-slider", "value")],
+    [State("history-store", "data")]
+)
+def update_dashboard(n_intervals, n_clicks, cpu_threshold, mem_threshold, refresh_interval, history):
+    # Simulate aggregated metrics
+    aggregated = simulate_aggregated_metrics() 
+    decision = simulate_decision_output(aggregated, cpu_threshold, mem_threshold)
+    
+    # Update history store with current sample
+    timestamp = aggregated["timestamp"]
+    cpu_avg = aggregated["cpu_percent"]["avg"]
+    mem_avg = aggregated["memory_percent"]["avg"]
+    
+    history["timestamps"].append(timestamp)
+    history["cpu_avgs"].append(cpu_avg)
+    history["mem_avgs"].append(mem_avg)
+    
+    # Create line graph for CPU
+    cpu_fig = {
+        "data": [go.Scatter(
+            x=list(range(len(history["cpu_avgs"]))),
+            y=history["cpu_avgs"],
+            mode="lines+markers",
+            name="CPU Avg (%)"
+        )],
+        "layout": go.Layout(
+            title="CPU Usage Over Time",
+            xaxis=dict(title="Sample"),
+            yaxis=dict(title="CPU Avg (%)", range=[0, 100])
+        )
+    }
