@@ -1,0 +1,48 @@
+dbc.Row([
+        dbc.Col([
+            # Replacing dbc.FormGroup with html.Div with className "form-group"
+            html.Div([
+                dbc.Label("CPU Threshold (%)"),
+                dcc.Slider(
+                    id="cpu-threshold-slider",
+                    min=50,
+                    max=100,
+                    step=1,
+                    value=80,
+                    marks={i: str(i) for i in range(50, 101, 10)},
+                    tooltip={"placement": "bottom", "always_visible": True}
+                )
+            ], className="form-group"),
+            html.Div([
+                dbc.Label("Memory Threshold (%)"),
+                dcc.Slider(
+                    id="mem-threshold-slider",
+                    min=50,
+                    max=100,
+                    step=1,
+                    value=75,
+                    marks={i: str(i) for i in range(50, 101, 10)},
+                    tooltip={"placement": "bottom", "always_visible": True}
+                )
+            ], className="form-group"),
+            dbc.Button("Refresh Now", id="refresh-button", color="primary", className="mr-3"),
+            html.Br(), html.Br(),
+            html.Div([
+                dbc.Label("Auto-Refresh Interval (seconds)"),
+                dcc.Slider(
+                    id="interval-slider",
+                    min=1,
+                    max=10,
+                    step=1,
+                    value=5,
+                    marks={i: str(i) for i in range(1, 11)},
+                    tooltip={"placement": "bottom", "always_visible": True}
+                )
+            ], className="form-group"),
+            # Hidden store for historical data
+            dcc.Store(id="history-store", data={"timestamps": [], "cpu_avgs": [], "mem_avgs": []}),
+            # Interval component for auto-refresh
+            dcc.Interval(id="interval-component", interval=5*1000, n_intervals=0)
+        ], width=12)
+    ])
+], fluid=True)
