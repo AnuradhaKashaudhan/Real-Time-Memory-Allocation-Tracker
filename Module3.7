@@ -1,0 +1,26 @@
+# Create line graph for Memory
+    mem_fig = {
+        "data": [go.Scatter(
+            x=list(range(len(history["mem_avgs"]))),
+            y=history["mem_avgs"],
+            mode="lines+markers",
+            name="Memory Avg (%)"
+        )],
+        "layout": go.Layout(
+            title="Memory Usage Over Time",
+            xaxis=dict(title="Sample"),
+            yaxis=dict(title="Memory Avg (%)", range=[0, 100])
+        )
+    }
+    
+    decision_str = json.dumps(decision, indent=4)
+    # Set auto-refresh interval based on slider (convert seconds to milliseconds)
+    interval_ms = refresh_interval * 1000
+    
+    return cpu_fig, mem_fig, decision_str, history, interval_ms
+
+# ---------------------------
+# Run the Dash Application
+# ---------------------------
+if _name_ == "_main_":
+    app.run_server(debug=True)
