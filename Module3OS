@@ -31,22 +31,4 @@ def simulate_aggregated_metrics():
                   "memory_percent": {"avg": 70.0, "min": 65.0, "max": 75.0, "std": 2.5},
                   "timestamp": "2025-02-14T17:06:48Z"
               }
-    """
-    base_cpu = 85.0 + random.uniform(-2, 2)
-    base_mem = 70.0 + random.uniform(-2, 2)
-    simulated_data = {
-        "cpu_percent": {
-            "avg": round(base_cpu, 1),
-            "min": round(base_cpu - 5, 1),
-            "max": round(base_cpu + 5, 1),
-            "std": 3.0
-        },
-        "memory_percent": {
-            "avg": round(base_mem, 1),
-            "min": round(base_mem - 5, 1),
-            "max": round(base_mem + 5, 1),
-            "std": 2.5
-        },
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    }
-    return simulated_data
+
