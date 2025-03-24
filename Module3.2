@@ -1,3 +1,22 @@
+    """
+    base_cpu = 85.0 + random.uniform(-2, 2)
+    base_mem = 70.0 + random.uniform(-2, 2)
+    simulated_data = {
+        "cpu_percent": {
+            "avg": round(base_cpu, 1),
+            "min": round(base_cpu - 5, 1),
+            "max": round(base_cpu + 5, 1),
+            "std": 3.0
+        },
+        "memory_percent": {
+            "avg": round(base_mem, 1),
+            "min": round(base_mem - 5, 1),
+            "max": round(base_mem + 5, 1),
+            "std": 2.5
+        },
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+    return simulated_data
 def simulate_decision_output(aggregated_metrics, cpu_threshold, mem_threshold):
     """
     Applies rule-based decision logic to simulated aggregated metrics.
@@ -24,93 +43,3 @@ def simulate_decision_output(aggregated_metrics, cpu_threshold, mem_threshold):
     }
     return decision
 
-# ---------------------------
-# Create the Dash Application
-# ---------------------------
-external_stylesheets = [dbc.themes.BOOTSTRAP]
-app = dash.Dash(_name_, external_stylesheets=external_stylesheets)
-
-# Layout of the dashboard using Bootstrap and html.Div for form groups
-app.layout = dbc.Container([
-    dbc.Row(
-        dbc.Col(html.H1("Adaptive Resource Allocation Dashboard", className="text-center my-4"), width=12)
-    ),
-    dbc.Row([
-        dbc.Col(
-            dbc.Card([
-                dbc.CardHeader("Aggregated System Metrics"),
-                dbc.CardBody(
-                    dcc.Graph(id="cpu-graph")
-                )
-            ], className="mb-4"),
-            width=6
-        ),
-        dbc.Col(
-            dbc.Card([
-                dbc.CardHeader("Memory Usage Over Time"),
-                dbc.CardBody(
-                    dcc.Graph(id="memory-graph")
-                )
-            ], className="mb-4"),
-            width=6
-        )
-    ]),
-    dbc.Row([
-        dbc.Col(
-            dbc.Card([
-                dbc.CardHeader("Resource Allocation Decision"),
-                dbc.CardBody(
-                    html.Pre(id="decision-output", style={"whiteSpace": "pre-wrap", "fontFamily": "monospace"})
-                )
-            ], className="mb-4"),
-            width=12
-        )
-    ]),
-    dbc.Row([
-        dbc.Col([
-            # Replacing dbc.FormGroup with html.Div with className "form-group"
-            html.Div([
-                dbc.Label("CPU Threshold (%)"),
-                dcc.Slider(
-                    id="cpu-threshold-slider",
-                    min=50,
-                    max=100,
-                    step=1,
-                    value=80,
-                    marks={i: str(i) for i in range(50, 101, 10)},
-                    tooltip={"placement": "bottom", "always_visible": True}
-                )
-            ], className="form-group"),
-            html.Div([
-                dbc.Label("Memory Threshold (%)"),
-                dcc.Slider(
-                    id="mem-threshold-slider",
-                    min=50,
-                    max=100,
-                    step=1,
-                    value=75,
-                    marks={i: str(i) for i in range(50, 101, 10)},
-                    tooltip={"placement": "bottom", "always_visible": True}
-                )
-            ], className="form-group"),
-            dbc.Button("Refresh Now", id="refresh-button", color="primary", className="mr-3"),
-            html.Br(), html.Br(),
-            html.Div([
-                dbc.Label("Auto-Refresh Interval (seconds)"),
-                dcc.Slider(
-                    id="interval-slider",
-                    min=1,
-                    max=10,
-                    step=1,
-                    value=5,
-                    marks={i: str(i) for i in range(1, 11)},
-                    tooltip={"placement": "bottom", "always_visible": True}
-                )
-            ], className="form-group"),
-            # Hidden store for historical data
-            dcc.Store(id="history-store", data={"timestamps": [], "cpu_avgs": [], "mem_avgs": []}),
-            # Interval component for auto-refresh
-            dcc.Interval(id="interval-component", interval=5*1000, n_intervals=0)
-        ], width=12)
-    ])
-], fluid=True)
