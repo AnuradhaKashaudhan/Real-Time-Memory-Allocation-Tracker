@@ -1,0 +1,14 @@
+ # Create line graph for CPU
+    cpu_fig = {
+        "data": [go.Scatter(
+            x=list(range(len(history["cpu_avgs"]))),
+            y=history["cpu_avgs"],
+            mode="lines+markers",
+            name="CPU Avg (%)"
+        )],
+        "layout": go.Layout(
+            title="CPU Usage Over Time",
+            xaxis=dict(title="Sample"),
+            yaxis=dict(title="CPU Avg (%)", range=[0, 100])
+        )
+    }
